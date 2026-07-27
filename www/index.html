@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lab Test Results</title>
+    <meta name="description" content="Live Lab Test Results Tracking">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="light-mode">
+    <div id="app">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="header-logo">
+                    <img src="logo.jpg" alt="Babylon Logo" class="logo-img">
+                    <h1>Lab Results</h1>
+                </div>
+                <div class="header-actions">
+                    <div id="refreshStatus" class="refresh-status"></div>
+                    <div class="menu-container">
+                        <button id="menuBtn" class="icon-btn"><i class="fas fa-bars"></i></button>
+                        <div id="dropdownMenu" class="dropdown-menu hidden">
+                            <button id="themeToggle" class="dropdown-item"><i class="fas fa-moon"></i> Dark Mode</button>
+                            <button id="aboutBtn" class="dropdown-item"><i class="fas fa-info-circle"></i> About App</button>
+                            <button id="refreshBtn" class="dropdown-item"><i class="fas fa-sync-alt"></i> Refresh Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search by Lot, Buyer, or ATL...">
+                <button id="clearSearch" class="clear-btn hidden"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div class="status-bar">
+                <span id="dataStatus">Showing last 5 days of live data</span>
+                <span id="resultCount" class="badge">0</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <div id="loader" class="loader-container">
+                <div class="spinner"></div>
+                <p>Fetching Live Data...</p>
+            </div>
+            
+            <div id="errorState" class="error-container hidden">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Failed to load data. Check your connection.</p>
+                <button id="retryBtn" class="btn primary-btn"><i class="fas fa-redo"></i> Retry</button>
+            </div>
+            
+            <div id="emptyState" class="empty-container hidden">
+                <i class="fas fa-inbox"></i>
+                <p>No results found.</p>
+            </div>
+
+            <div id="resultsList" class="results-list hidden"></div>
+        </main>
+    </div>
+
+    <!-- Lot Details Modal -->
+    <div id="detailsModal" class="modal-overlay hidden">
+        <div class="modal-content report-modal">
+            <div class="modal-header">
+                <h2>Full Details</h2>
+                <button id="closeModalBtn" class="icon-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div id="reportContent" class="report-container">
+
+                    <!-- Report Header with REAL logo -->
+                    <div class="report-logo-header">
+                        <img src="logo.jpg" alt="Babylon" class="report-logo-img">
+                        <div class="report-title-block">
+                            <h4>TESTING LABORATORY</h4>
+                            <h3>Lab Test Report</h3>
+                        </div>
+                    </div>
+
+                    <!-- Info Table -->
+                    <table class="report-table info-table">
+                        <tbody>
+                            <tr>
+                                <th>Batch No</th>
+                                <td id="repBatch"></td>
+                                <th>Buyer</th>
+                                <td id="repBuyer"></td>
+                            </tr>
+                            <tr>
+                                <th>Order No</th>
+                                <td id="repOrder"></td>
+                                <th>Date</th>
+                                <td id="repDate"></td>
+                            </tr>
+                            <tr>
+                                <th>Shift</th>
+                                <td id="repShift"></td>
+                                <th>Report No</th>
+                                <td id="repReport"></td>
+                            </tr>
+                            <tr>
+                                <th>Colour</th>
+                                <td id="repColor"></td>
+                                <th>Fab. Type</th>
+                                <td id="repFabType"></td>
+                            </tr>
+                            <tr>
+                                <th>Composition</th>
+                                <td id="repComposition"></td>
+                                <th>Quantity</th>
+                                <td id="repQty"></td>
+                            </tr>
+                            <tr>
+                                <th>Req. GSM</th>
+                                <td id="repReqGsm"></td>
+                                <th>Req. Dia</th>
+                                <td id="repReqDia"></td>
+                            </tr>
+                            <tr>
+                                <th>Finish Dia</th>
+                                <td id="repFinishDia" colspan="3"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Test Results Table -->
+                    <table class="report-table result-table">
+                        <thead>
+                            <tr>
+                                <th>TEST NAME</th>
+                                <th>SPEC.</th>
+                                <th>TEST RESULT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3">Dimensional Stability to Washing</td>
+                                <td class="text-center">Length</td>
+                                <td id="repLength" class="text-center highlightable"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">Width</td>
+                                <td id="repWidth" class="text-center highlightable"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">Twisting</td>
+                                <td id="repTwisting" class="text-center highlightable"></td>
+                            </tr>
+                            <tr>
+                                <td>pH Value</td>
+                                <td class="text-center">—</td>
+                                <td id="repPh" class="text-center"></td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">Color Fastness to Rubbing</td>
+                                <td class="text-center">Dry</td>
+                                <td id="repRubbingDry" class="text-center"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">Wet</td>
+                                <td id="repRubbingWet" class="text-center"></td>
+                            </tr>
+                            <tr>
+                                <td>Found GSM</td>
+                                <td class="text-center">—</td>
+                                <td id="repGsmResult" class="text-center"></td>
+                            </tr>
+                            <tr>
+                                <td>Drying</td>
+                                <td class="text-center">—</td>
+                                <td id="repDrying" class="text-center"></td>
+                            </tr>
+                            <tr>
+                                <td>Others / Info</td>
+                                <td class="text-center">—</td>
+                                <td id="repOthers" class="text-center"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button id="shareResultBtn" class="btn whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i> Share Result
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal-overlay hidden">
+        <div class="modal-content about-modal">
+            <div class="modal-header">
+                <h2>About App</h2>
+                <button id="closeAboutBtn" class="icon-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="developer-info">
+                    <div class="avatar">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>MD ROKON</h3>
+                    <p class="role">Developer & Creator</p>
+                    <div class="contact-links">
+                        <a href="tel:01647710985" class="contact-item">
+                            <i class="fas fa-phone-alt"></i> 01647710985
+                        </a>
+                        <a href="mailto:mrokon01@gmail.com" class="contact-item">
+                            <i class="fas fa-envelope"></i> mrokon01@gmail.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

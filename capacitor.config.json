@@ -1,0 +1,6 @@
+{
+  "appId": "com.mdrokon.labtestapp",
+  "appName": "Lab Test Result",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}
